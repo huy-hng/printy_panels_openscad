@@ -12,14 +12,14 @@ epsilon = 0.001;
 /* [General Settings] */
 
 // size in X direction
-panel_x = 6;
+panel_x = 4;
 // size in Y direction
-panel_y = 2;
+panel_y = 4;
 
 /* [Window Settings] */
 // set this to a negative value to get the biggest window size, otherwise a positive value will create the desired size
-window_size_x = 0;
-window_size_y = 0;
+window_size_x = 2;
+window_size_y = 2;
 
 // setting this to 0 will put the window at the corner, creating a non rectangular panel
 window_location_x = 1;
@@ -64,10 +64,13 @@ module plus_cutout() {
 	zrot(45) cuboid(cutout_center_size);
 }
 
+
 module panel(x, y) {
+	function panel_size(size) = (base_length + base_padding) * size - base_padding;
+
 	difference() {
-		x_len = (base_length + base_padding) * x - base_padding;
-		y_len = (base_length + base_padding) * y - base_padding;
+		x_len = panel_size(x);
+		y_len = panel_size(y);
 
 		fillet_chamfer(chamfer=base_chamfer, rounding=base_radius-base_chamfer, anchor=BOTTOM+FRONT+LEFT)
 			chamfered_cuboid([x_len, y_len, base_thickness]);
@@ -82,19 +85,19 @@ module panel(x, y) {
 }
 
 module window_cutout() {
+	function calc_window_size(size) = (base_length + base_padding) * size + base_padding;
+	function calc_window_offset(location) = (base_length + base_padding) * location - base_padding;
+
 	window_size_x = (window_size_x < 0) ? panel_x - 2 : window_size_x;
 	window_size_y = (window_size_y < 0) ? panel_y - 2 : window_size_y;
 
 	window_size = [
-		(base_length + base_padding) * window_size_x + base_padding,
-		(base_length + base_padding) * window_size_y + base_padding,
+		calc_window_size(window_size_x),
+		calc_window_size(window_size_y),
 		base_thickness + epsilon
 	];
 	chamfer_size = [window_size.x + base_chamfer*2, window_size.y + base_chamfer*2, base_chamfer*2];
-	window_offset = [
-		(base_length + base_padding) * window_location_x - base_padding,
-		(base_length + base_padding) * window_location_y - base_padding
-	];
+	window_offset = [calc_window_offset(window_location_x), calc_window_offset(window_location_y)];
 
 	move(window_offset) {
 		cuboid(window_size, rounding=base_radius, edges="Z", anchor=BOTTOM+FRONT+LEFT) {
