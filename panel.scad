@@ -9,7 +9,7 @@ $fn = 128;
 // small value to help with Z fighting
 epsilon = 0.001;
 
-/* [General Settings] */
+/* [Panel Size] */
 
 // size in X direction
 panel_x = 4;
@@ -28,7 +28,7 @@ window_location_y = 1;
 
 /* [CONSTANTS] */
 
-//DO NOT CHANGE unless you want to omit compatibility with default printy plate components
+// DO NOT CHANGE unless you want to omit compatibility with default printy plate components
 base_length = 29;
 base_padding = 3;
 base_thickness = 3;
@@ -121,7 +121,6 @@ function chamfer_shrink(size, chamfer=1, rounding=0, edges=TOP) = [
 ];
 
 module chamfered_cuboid(size, shrink=true) {
-	echo(chamfer_shrink(size, $chamfer, $rounding, $edges));
 	if (shrink)
 		cuboid(chamfer_shrink(size, $chamfer, $rounding, $edges), anchor=$anchor) children();
 	else
