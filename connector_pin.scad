@@ -1,6 +1,6 @@
 include <BOSL2/std.scad>
 
-module connector() {
+module connector_pin() {
 
 	module rotated_outer_part(side) {
 		// dont mind these weird operations, I'm bad at openscad
